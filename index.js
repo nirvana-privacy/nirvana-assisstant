@@ -18,7 +18,7 @@ app.get('/', (req, res) => {
 })
 
 app.post('/ask', (req, res) => {
-  console.log("ASKED: ", req.body.data);
+  console.log("ASKED: ", req.body);
   makeRequest(req.body.data).then((data) => {
     console.log('REPLY: ', data.data.choices[0].text)
     res.send(data.data.choices[0].text)
