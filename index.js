@@ -13,10 +13,10 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 app.get('/', (req, res) => {
-  console.log(req.body.data)
-  // if(!req.body.data) {
-  //   req.body.data = "How does it work?";
-  // }
+  res.send("Hello, Bitch!")
+})
+
+app.post('/ask', (req, res) => {
   makeRequest(req.body.data).then((data) => {
     console.log(data.data.choices[0].text)
     res.send(data.data.choices[0].text)
