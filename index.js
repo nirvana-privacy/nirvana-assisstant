@@ -8,9 +8,10 @@ app.use(bodyParser.json());
 const { Configuration, OpenAIApi } = require("openai");
 
 const configuration = new Configuration({
-  apiKey: "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",
+  apiKey: process.env.OPENAI_TOKEN,
 });
 const openai = new OpenAIApi(configuration);
+
 
 app.get('/', (req, res) => {
   res.send("Hello, Bitch!")
@@ -23,10 +24,14 @@ app.post('/ask', (req, res) => {
     res.send(data.data.choices[0].text)
   }).catch((error)=>{
     console.error(error)
+    res.send(error.message)
   })
 })
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}!`)
+  console.log(process.env.NODE_ENV)
+})
 
 
 async function makeRequest(data) {
