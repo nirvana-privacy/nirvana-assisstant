@@ -39,7 +39,8 @@ async function makeRequest(data) {
     model: "text-davinci-003",
     prompt: data,
     temperature: 0,
-    max_tokens: 40,
+    max_tokens: 100,
+    stream: false
   });
   return response
 }
