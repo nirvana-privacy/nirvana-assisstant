@@ -12,6 +12,12 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
+const maxContextTurns = 20;
+let context = {
+  conversation: [
+  ]
+};
+
 
 app.get('/', (req, res) => {
   res.send("Hello, Bitch!")
@@ -34,15 +40,18 @@ app.listen(port, () => {
 })
 
 
-async function makeRequest(data) {
+async function makeRequest(userMessage) {
+  if (context.conversation.length > maxContextTurns) {
+    context.conversation = context.conversation.slice(-maxContextTurns);
+  }
+
   const response = await openai.createCompletion({
     model: "text-davinci-003",
-    prompt: data,
-    temperature: 0,
+    prompt: `${context.conversation.join('\n')}\n${userMessage}\n`,
+    temperature: 0.5,
     max_tokens: 100,
+    // stop: '\n',
     stream: false
   });
   return response
 }
-
-
