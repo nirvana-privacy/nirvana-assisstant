@@ -26,8 +26,8 @@ app.get('/', (req, res) => {
 app.post('/ask', (req, res) => {
   console.log("ASKED: ", req.body);
   makeRequest(req.body.data).then((data) => {
-    console.log('REPLY: ', data.data.choices[0].text)
-    res.send(data.data.choices[0].text)
+    console.log('REPLY: ', data)
+    res.send(data)
   }).catch((error)=>{
     console.error(error)
     res.send(error.message)
@@ -41,10 +41,12 @@ app.listen(port, () => {
 
 
 async function makeRequest(userMessage) {
+  
+  console.log("CONTEXT", context.conversation,context.conversation.length, )
   if (context.conversation.length > maxContextTurns) {
     context.conversation = context.conversation.slice(-maxContextTurns);
   }
-  console.log("CONTEXT", context.conversation)
+ 
   const response = await openai.createCompletion({
     model: "text-davinci-003",
     prompt: `${context.conversation.join('\n')}\n${userMessage}\n`,
@@ -53,5 +55,8 @@ async function makeRequest(userMessage) {
     // stop: '\n',
     stream: false
   });
-  return response
+
+  context.conversation.push(userMessage)
+  context.conversation.push(response.data.choices[0].text)
+  return response.data.choices[0].text
 }
