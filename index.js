@@ -44,7 +44,7 @@ async function makeRequest(userMessage) {
   if (context.conversation.length > maxContextTurns) {
     context.conversation = context.conversation.slice(-maxContextTurns);
   }
-
+  console.log("CONTEXT", context.conversation)
   const response = await openai.createCompletion({
     model: "text-davinci-003",
     prompt: `${context.conversation.join('\n')}\n${userMessage}\n`,
